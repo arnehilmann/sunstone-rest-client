@@ -60,3 +60,9 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+
+# virtualenv
+venv/
+
+# vi swp file
+*.swp
