@@ -13,6 +13,7 @@ class RestClient(object):
         self.client_opts = {}
         self.verify = verify
         self.cache = {}
+        self.client = None
 
     def login(self, username, password, **kwargs):
         self.client = requests.session()
@@ -27,12 +28,7 @@ class RestClient(object):
                                headers={'Referer': self.url},
                                verify=self.verify)
 
-        soup = BeautifulSoup(root.content, 'html.parser')
-        for script in soup.findAll('script'):
-            match = re.search('var csrftoken\s*=\s*["\'](.*)["\']\s*;', script.text)
-            if match:
-                self.csrftoken = match.group(1)
-                break
+        self.csrftoken = find_csrftoken(root.content)
         if not self.csrftoken:
             raise Exception("login successfully, but no csrftoken found in %s" % self.url)
 
@@ -56,9 +52,12 @@ class RestClient(object):
 
     def fetch_vms(self):
         vms = self._fetch("vm")["VM_POOL"]["VM"]
+        if isinstance(vms, dict):
+            return [vms]
         return vms if vms else []
 
     def get_vm_by_id(self, id):
+        id = str(id)
         for vm in self.fetch_vms():
             if vm["ID"] == id:
                 return vm
@@ -128,3 +127,12 @@ class RestClient(object):
                                    headers={"Content-Type":
                                             "application/x-www-form-urlencoded; charset=UTF-8"})
         return reply
+
+
+def find_csrftoken(html):
+    soup = BeautifulSoup(html, 'html.parser')
+    for script in soup.findAll('script'):
+        match = re.search('var csrftoken\s*=\s*["\'](.*)["\']\s*;', script.text)
+        if match:
+            return match.group(1)
+    return None
