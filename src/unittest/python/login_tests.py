@@ -39,16 +39,16 @@ class LoginTests(unittest.TestCase):
         client.cache = {"/vm": {"VM_POOL": {"VM": {"NAME": "dummyVM", "ID": "42"}}},
                         "/vmtemplate": {
                             "VMTEMPLATE_POOL": {"VMTEMPLATE": {"NAME": "foo", "UID": "333", "TEMPLATE": "empty"}}}}
-        client.client = Mock()
-        client.client.post = Mock(return_value="ok")
+        client.session = Mock()
+        client.session.post = Mock(return_value="ok")
         result = client.instantiate_by_name("foo", "newVM")
         self.assertEqual(result, "ok")
 
     def test_delete(self):
         client = sunstone_rest_client.RestClient("http://foobar:4711")
         client.cache = {"/vm": {"VM_POOL": {"VM": {"NAME": "dummyVM", "ID": "42"}}}}
-        client.client = Mock()
-        client.client.delete = Mock(return_value="ok")
+        client.session = Mock()
+        client.session.delete = Mock(return_value="ok")
         result = client.delete_multiple_vms_by_name("dummyVM")
         self.assertEqual(result["42"], "ok")
 

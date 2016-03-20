@@ -13,20 +13,20 @@ class RestClient(object):
         self.client_opts = {}
         self.verify = verify
         self.cache = {}
-        self.client = None
+        self.session = None
 
     def login(self, username, password, **kwargs):
-        self.client = requests.session()
+        self.session = requests.session()
 
-        login = self.client.post(self.url + "login",
-                                 auth=(username, password),
-                                 verify=self.verify)
+        login = self.session.post(self.url + "login",
+                                  auth=(username, password),
+                                  verify=self.verify)
         if not login.ok:
             raise Exception("cannot login on %s" % self.url)
 
-        root = self.client.get(self.url,
-                               headers={'Referer': self.url},
-                               verify=self.verify)
+        root = self.session.get(self.url,
+                                headers={'Referer': self.url},
+                                verify=self.verify)
 
         self.csrftoken = find_csrftoken(root.content)
         if not self.csrftoken:
@@ -40,9 +40,9 @@ class RestClient(object):
         endpoint = endpoint if endpoint.startswith("/") else "/" + endpoint
         if endpoint in self.cache:
             return self.cache[endpoint]
-        reply = self.client.get(self.url + endpoint,
-                                params=self.client_opts,
-                                verify=self.verify)
+        reply = self.session.get(self.url + endpoint,
+                                 params=self.client_opts,
+                                 verify=self.verify)
         if not reply.ok:
             raise Exception("unable to fetch %s: %s" % (endpoint, reply.reason))
 
@@ -94,7 +94,7 @@ class RestClient(object):
     def _action(self, endpoint, perform, params):
         action = {"action": {"perform": perform, "params": params},
                   "csrftoken": self.csrftoken}
-        reply = self.client.post(self.url + endpoint, data=json.dumps(action))
+        reply = self.session.post(self.url + endpoint, data=json.dumps(action))
         return reply
 
     def instantiate(self, template, vm_name):
@@ -122,10 +122,10 @@ class RestClient(object):
     def delete_vm_by_id(self, vm_id):
         data = "csrftoken=%s" % self.csrftoken
         endpoint = "vm/%s" % vm_id
-        reply = self.client.delete(self.url + endpoint,
-                                   data=data,
-                                   headers={"Content-Type":
-                                            "application/x-www-form-urlencoded; charset=UTF-8"})
+        reply = self.session.delete(self.url + endpoint,
+                                    data=data,
+                                    headers={"Content-Type":
+                                             "application/x-www-form-urlencoded; charset=UTF-8"})
         return reply
 
 
