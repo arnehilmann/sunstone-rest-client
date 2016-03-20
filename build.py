@@ -21,8 +21,8 @@ description = """sunstone rest client
 an opennebula client in python, using the sunstone ReST API
 instead of the XML-RPC
 """
-url = ''
-license = 'proprietary'
+url = 'https://github.com/arnehilmann/sunstone-rest-client'
+license = 'Apache License v2.0'
 
 
 @init
