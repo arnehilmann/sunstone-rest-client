@@ -17,5 +17,6 @@ deploy:
   file:
     - $(find target/dist/*/dist/*.noarch.rpm)
     - $(find target/dist/*/dist/*.src.rpm)
+  skip_cleanup: true
   on:
     repo: arnehilmann/sunstone-rest-client
