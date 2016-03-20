@@ -19,6 +19,7 @@ deploy:
       - $(find target/dist/*/dist/*.src.rpm)
     skip_cleanup: true
     on:
+      tags: true
       repo: arnehilmann/sunstone-rest-client
   - provider: pypi
     user: Arne.Hilmann
