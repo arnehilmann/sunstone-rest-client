@@ -13,10 +13,9 @@ after_success:
 deploy:
   provider: releases
   api_key:
-    secure: QzO7L/azRkL6AAOhdglX76pHNfOdBw2xZ50hW0SQC3QSwDISTHM2egJ0KlvL4nq/44mlx5Fa7n1U42DQHI1IGeW23eJ45dEoEnx7MUnNPEhGrxS2wA8l/yXJ7fFXfRltGDZpHQ3rDxlf/ybs/1YV0/7fXDPB2LIpE5n6XgDixRUpbgLQ2/kkrnKgJvjm5AQGvznJRRvKPGVjgfPiz+j24UYd0rVPZm8m4gVsEFbOS+TKSdT3uBh30Vr8R/dRu7uW+M8iYvcjy9YKkj8gOR6jHVAKvcLzQF/eySj+qtFVkHKHML+0sdDa5eE6QFrSGYj9ZPIboLfCfAvcU7RDtP6ZhHZYAPj3sDmqlBLkHxo3SEwbILvqyQSeNI/bQqJbjcHkbZ50curUMmZEdyJvr0BEYTMyt7nF3dfxOU64b2cIdDtiShLF4OzUxuCH72o/Nfjv7iJxmIt/lQz80Gh4pVfqbjQQApBw7ih0GJZaKdJQ7qMxXbeWEIr9WI1QKOjffuYlNiLlNeUPAapfNHL8XDL+twQB8iNpxnyjoEic6qLPvxn85+jsUm4vc3433HU3eSaspI4y6NYmrOme6IRieZal26ShHifFPS47Vr2gFU2s+MnM0OXuRaYFzaIyZ1VWUbh2h+Rx91qAHHha9VlRmXruWpj2B55v+tuuF+tbsOoKuO8=
+    secure: OJ5+x3bGC+uviLoGMOvSajD57okOH6w2G5NI2PYvRXwqCYbJqxCLlLp007kt6JBJnpTtburUJz1AUffp/jBPJcHAJuWbXJzj4OFpcfPvuIwsWmcn8I3P1hpmchBpDFsTzDVyEuT7rqtRlqYqZiYK6pF/4W/92f4QlvEJdbvuTWKrd4bUvygaxX5MM37nFoaYxR0RQ2jG+2xHT4Ee6DrQtQN2HJhbCVw7GzSV1rF2Wusgm14hsyx8rvKDHdXYLdABU26seJlufuNMqc2QoSBMf6HYnssdZMYnJYJpILhJf3FuNAX3mYxyWUQUxyG7osiTX9aZFOWp7+PZIUebt2BOYrKIdHg2JC9Yg0fAPPBvxstbxZ5y0NYvO/lP1jN63fCETkyhwo4MjjQyUdqhtVJZAkOcoqEvhHXjEVeTum1rHqzkFu7x6lx2jRpGvDAgUb+cupCyL1U6jJtK660pTA8jjgTxvvTcvRT6O5hIUlcPpeMOp2seDDcwYZIOE/FHkOD8ayANaSZ6wiq4GnvFmeRqsEibvBg2ERDazp4uOEeshEHKLFe4XC+BwbLaTlOGdqfKliPxyA/KKbpLoKxOQXz7t9BqW5xMz6hsDI8jDXW1y1fLk6y8f6XZ944r8i1yDvGQYdv4mYeL2OLoRIu0BGPzcr4AE/9VnR1VixSw9AVZvFE=
   file:
-    - $(find target/dist/*/dist/*.src.rpm)
-    - $(find target/dist/*/dist/*.noarch.rpm)
-  skip_cleanup: true
+    - target/dist/*/dist/*.noarch.rpm
+    - target/dist/*/dist/*.src.rpm
   on:
-    tags: true
+    repo: arnehilmann/sunstone-rest-client
