@@ -1,7 +1,6 @@
 sudo: required
 language: python
 python:
-- '2.6'
 - '2.7'
 install:
 - sudo apt-get install rpm
@@ -25,6 +24,7 @@ deploy:
     user: Arne.Hilmann
     password:
       secure: lQ+ON7rm/Qi5ZNtQ01WV5WIuKk6cPQ6cPFUnr/zAPumtjZFCy2A9/jHUsXLTsJpbJ7Fdt1uvwBNe+bOoGqQvhc+De7XfEFOGOQbDUyCn2dNulEaIEeDx1N4nNbaQ01yUWbDgo7LRYqGmCxbgtMx2Fir73ibZTpvcT8oNtnHWu09Ejvs0Aqj91cK4jdx+H8csSXreRl9psf8i7gLhxuFgazxKjEMdlh9vemGlubi7yqp1HZCMWLghCLaJFoCT9DZoM0dcaEUAaxAbmGR3x6fKeDeHSwT060C0cLJ7TxnRA9DYxFtCHd1++xZHQseggaMfY9NYSoyJBgOI65knNhDBG7JvgeYHMC+xA3lZDTRA74OI5GHQD+W1/C78UzEJmaqipqW3c55cGlzIQuk4AzvyRVDP/EQTCV2vGhegXKUQrGBjikEjJAb9kkV3wqsvBPvEONIyJ5mAMnghxgYSNenZGqBYS8hgcbwd7fWBWVQ/l+UXF4afK02Yv4SYnw3eVaatHiwTcmwHyWC+ehLgd8jc3nEh0CukDdOqUgTe1f+MUd7z/Djs+cwsW8P0J3jzPDpPaXW/q2DY7PembQ5P1tPzIice1Hq368cHQryTbYRrtpil66hf9dTF3KGOgY5TEGKHKlHKoGTUmcHYTjpMjjqzos1IDIIerdap1LCvS5xRo6c=
+    skip_cleanup: true
     on:
       tags: true
       distributions: sdist bdist_wheel
