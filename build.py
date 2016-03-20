@@ -10,7 +10,7 @@ use_plugin('copy_resources')
 use_plugin('filter_resources')
 
 name = "sunstone-rest-client"
-version = '0.0.2'
+version = '0.0.3'
 
 default_task = ["clean", "analyze", "publish"]
 
@@ -46,5 +46,5 @@ def set_properties(project):
 
     project.set_property('copy_resources_target', '$dir_dist')
     project.get_property('copy_resources_glob').append('setup.cfg')
-    project.get_property('filter_resources_glob').append('setup.cfg')
-    project.set_property('distutils_commands', ['sdist'])
+    project.get_property('filter_resources_glob').extend(['**/setup.cfg'])
+    project.set_property('distutils_commands', ['sdist', 'bdist_rpm'])
