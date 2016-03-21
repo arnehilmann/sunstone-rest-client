@@ -1,3 +1,4 @@
+import sys
 from pybuilder.core import use_plugin, init, Author
 
 use_plugin("python.core")
@@ -42,7 +43,8 @@ def set_properties(project):
     project.set_property('flake8_ignore', 'E501,E402,E731')
     project.set_property('flake8_break_build', True)
 
-    project.rpm_release = 0
+    project.rpm_release = "0.py%i%i" % sys.version_info[0:2]
+    project.python_version_range = "python >={0}.{1}, python <={0}.{1}.9999".format(*sys.version_info[0:2])
 
     project.set_property('copy_resources_target', '$dir_dist')
     project.get_property('copy_resources_glob').append('setup.cfg')
