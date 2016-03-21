@@ -128,6 +128,12 @@ class RestClient(object):
                                              "application/x-www-form-urlencoded; charset=UTF-8"})
         return reply
 
+    def fetch_hosts(self):
+        hosts = self._fetch("host")["HOST_POOL"]["HOST"]
+        if isinstance(hosts, dict):
+            return [hosts]
+        return hosts if hosts else []
+
 
 def find_csrftoken(html):
     soup = BeautifulSoup(html, 'html.parser')
@@ -136,3 +142,8 @@ def find_csrftoken(html):
         if match:
             return match.group(1)
     return None
+
+
+if __name__ == "__main__":
+    client = RestClient("http://localhost:9869").login("oneadmin", "opennebula")
+    print client.fetch_hosts()
