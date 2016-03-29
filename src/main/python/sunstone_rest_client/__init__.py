@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import print_function
 import json
 import re
 
@@ -146,4 +147,4 @@ def find_csrftoken(html):
 
 if __name__ == "__main__":
     client = RestClient("http://localhost:9869").login("oneadmin", "opennebula")
-    print client.fetch_hosts()
+    print(client.fetch_hosts())
