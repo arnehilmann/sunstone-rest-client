@@ -1,7 +1,9 @@
 sudo: required
 language: python
 python:
+- '2.6'
 - '2.7'
+- '3.5'
 install:
 - sudo apt-get install rpm
 - pip install coveralls
@@ -16,7 +18,7 @@ deploy:
       secure: OJ5+x3bGC+uviLoGMOvSajD57okOH6w2G5NI2PYvRXwqCYbJqxCLlLp007kt6JBJnpTtburUJz1AUffp/jBPJcHAJuWbXJzj4OFpcfPvuIwsWmcn8I3P1hpmchBpDFsTzDVyEuT7rqtRlqYqZiYK6pF/4W/92f4QlvEJdbvuTWKrd4bUvygaxX5MM37nFoaYxR0RQ2jG+2xHT4Ee6DrQtQN2HJhbCVw7GzSV1rF2Wusgm14hsyx8rvKDHdXYLdABU26seJlufuNMqc2QoSBMf6HYnssdZMYnJYJpILhJf3FuNAX3mYxyWUQUxyG7osiTX9aZFOWp7+PZIUebt2BOYrKIdHg2JC9Yg0fAPPBvxstbxZ5y0NYvO/lP1jN63fCETkyhwo4MjjQyUdqhtVJZAkOcoqEvhHXjEVeTum1rHqzkFu7x6lx2jRpGvDAgUb+cupCyL1U6jJtK660pTA8jjgTxvvTcvRT6O5hIUlcPpeMOp2seDDcwYZIOE/FHkOD8ayANaSZ6wiq4GnvFmeRqsEibvBg2ERDazp4uOEeshEHKLFe4XC+BwbLaTlOGdqfKliPxyA/KKbpLoKxOQXz7t9BqW5xMz6hsDI8jDXW1y1fLk6y8f6XZ944r8i1yDvGQYdv4mYeL2OLoRIu0BGPzcr4AE/9VnR1VixSw9AVZvFE=
     file:
       - $(find target/dist/*/dist/*.noarch.rpm)
-      - $(find target/dist/*/dist/*.src.rpm)
+      - $(find target/dist/*/dist/*.tar.gz)
     skip_cleanup: true
     on:
       tags: true
