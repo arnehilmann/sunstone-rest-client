@@ -15,7 +15,7 @@ from sunstone_rest_client import RestClient
 client = RestClient("https://<sunstone-uri>").login("user", "passwd")
 print client.fetch_vms()
 
-client.instatiate(0, "my-new-vm")  # instantiates template id 0
+client.instantiate(0, "my-new-vm")  # instantiates template id 0
 
 # client.delete_vm(0)
 ```
