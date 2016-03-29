@@ -11,7 +11,7 @@ use_plugin('copy_resources')
 use_plugin('filter_resources')
 
 name = "sunstone-rest-client"
-version = '0.0.7'
+version = '0.0.8'
 
 default_task = ["clean", "analyze", "publish"]
 
