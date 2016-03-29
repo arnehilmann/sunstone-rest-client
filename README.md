@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/arnehilmann/sunstone-rest-client.svg?branch=master)](https://travis-ci.org/arnehilmann/sunstone-rest-client)
 [![Coverage Status](https://coveralls.io/repos/github/arnehilmann/sunstone-rest-client/badge.svg?branch=master)](https://coveralls.io/github/arnehilmann/sunstone-rest-client?branch=master)
-(pypi)[https://pypi.python.org/pypi/sunstone-rest-client]
+[pypi](https://pypi.python.org/pypi/sunstone-rest-client)
 
 A minimal ReST client for [sunstone](http://docs.opennebula.org/4.14/administration/sunstone_gui/sunstone.html),
 the web ui of [opennebula](http://opennebula.org/tryout/sandboxvirtualbox/)
