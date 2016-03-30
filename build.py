@@ -1,4 +1,3 @@
-import sys
 from pybuilder.core import use_plugin, init, Author
 
 use_plugin("python.core")
@@ -11,7 +10,7 @@ use_plugin('copy_resources')
 use_plugin('filter_resources')
 
 name = "sunstone-rest-client"
-version = '0.0.8'
+version = '0.0.9'
 
 default_task = ["clean", "analyze", "publish"]
 
@@ -42,9 +41,6 @@ def set_properties(project):
     project.set_property('flake8_include_test_sources', True)
     project.set_property('flake8_ignore', 'E501,E402,E731')
     project.set_property('flake8_break_build', True)
-
-    project.rpm_release = "py%i%i" % sys.version_info[0:2]
-    project.python_version_range = "python >= {0}.{1}, python <= {0}.{1}.9999".format(*sys.version_info[0:2])
 
     project.set_property('copy_resources_target', '$dir_dist')
     project.get_property('copy_resources_glob').append('setup.cfg')
