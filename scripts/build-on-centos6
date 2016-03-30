@@ -10,8 +10,6 @@ time docker run -v $BUILD_DIR:$WORK_DIR -w $WORK_DIR centos:6 bash -c \
     "ls -al && chown -R root.root . && chmod -R a+w . && yum install -y python-setuptools rpm-build && python setup.py bdist_rpm --release py26 && chmod -R a+w ."
 
 time docker run -v $BUILD_DIR:$WORK_DIR -w $WORK_DIR centos:6 bash -c \
-    "yum install -y epel-release && rpm -qilp dist/*.noarch.rpm && yum install -y dist/*.noarch.rpm"
-
-#docker run -it -v $BUILD_DIR:$WORK_DIR -w $WORK_DIR centos:6 bash
+    "yum install -y epel-release && rpm -qilp dist/*.noarch.rpm && yum install -y dist/*.noarch.rpm && python -c 'import sunstone_rest_client'"
 
 echo "build took $SECONDS seconds"
