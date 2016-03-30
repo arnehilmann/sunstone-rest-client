@@ -1,16 +1,15 @@
-sudo: required
 language: python
+sudo: required
 python:
-- '2.6'
-- '2.7'
+  - '2.7'
 install:
-- sudo apt-get install rpm
-- pip install coveralls
-- pip install pybuilder
-- pyb install_dependencies
+  - sudo apt-get install rpm
+  - pip install coveralls
+  - pip install pybuilder
+  - pyb install_dependencies
 script: pyb
 after_success:
-- coveralls --verbose
+  - coveralls --verbose
 deploy:
   - provider: releases
     api_key:
