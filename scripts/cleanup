@@ -12,11 +12,11 @@ done
 echo "## pwd"
 pwd
 
+echo "## copy dist to toplevel"
+cp -R target/dist/*/dist .
+
 echo "## find"
 find .
-
-echo "## ps aux"
-ps aux
 
 echo "## lsof of scripts/"
 lsof scripts
