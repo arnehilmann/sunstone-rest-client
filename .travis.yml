@@ -1,8 +1,9 @@
 language: python
-sudo: required
 python:
+  - '2.6'
   - '2.7'
   - '3.4'
+  - '3.5'
 services:
   - docker
 install:
@@ -32,5 +33,6 @@ deploy:
     skip_cleanup: true
     on:
       tags: true
-      distributions: sdist bdist_wheel
+      distributions: sdist
       repo: arnehilmann/sunstone-rest-client
+      condition: $TRAVIS_PYTHON_VERSION = "2.7"
