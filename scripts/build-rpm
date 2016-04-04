@@ -22,7 +22,7 @@ build_on_centos6() {
         cp dist/*.rpm /var/tmp/dist &&
         chown -R $(stat -c %u:%g .) /var/tmp/dist"
     time docker run -v $BUILD_DIR:$WORK_DIR -w $WORK_DIR centos:6 bash -c "
-        rpm -qilp dist/*-py26.noarch.rpm &&
+        rpm -qilp dist/*-py26.noarch.rpm --requires &&
         yum install -y epel-release &&
         yum install -y dist/*-py26.noarch.rpm"
 }
@@ -40,7 +40,7 @@ build_on_centos7() {
         cp dist/*.rpm /var/tmp/dist &&
         chown -R $(stat -c %u:%g .) /var/tmp/dist"
     time docker run -v $BUILD_DIR:$WORK_DIR -w $WORK_DIR centos:7 bash -c "
-        rpm -qilp dist/*-py27.noarch.rpm &&
+        rpm -qilp dist/*-py27.noarch.rpm --requires &&
         yum install -y epel-release &&
         yum install -y dist/*-py27.noarch.rpm"
 }
@@ -58,7 +58,7 @@ build_on_fedora23() {
         cp dist/*.rpm /var/tmp/dist &&
         chown -R $(stat -c %u:%g .) /var/tmp/dist"
     time docker run -v $BUILD_DIR:$WORK_DIR -w $WORK_DIR fedora:23 bash -c "
-        rpm -qilp dist/*-py34.noarch.rpm &&
+        rpm -qilp dist/*-py34.noarch.rpm --requires &&
         dnf install -y dist/*-py34.noarch.rpm"
 }
 
