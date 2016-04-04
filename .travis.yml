@@ -4,27 +4,16 @@ python:
   - '2.7'
 services:
   - docker
-before_install:
-  - docker pull centos:6
 install:
   - pip install coveralls
   - pip install pybuilder
   - pyb install_dependencies
 script:
   - pyb -X
-  - scripts/build-on-centos6
 after_success:
+  - scripts/build-rpm
   - coveralls --verbose
 deploy:
-  - provider: pypi
-    user: Arne.Hilmann
-    password:
-      secure: lQ+ON7rm/Qi5ZNtQ01WV5WIuKk6cPQ6cPFUnr/zAPumtjZFCy2A9/jHUsXLTsJpbJ7Fdt1uvwBNe+bOoGqQvhc+De7XfEFOGOQbDUyCn2dNulEaIEeDx1N4nNbaQ01yUWbDgo7LRYqGmCxbgtMx2Fir73ibZTpvcT8oNtnHWu09Ejvs0Aqj91cK4jdx+H8csSXreRl9psf8i7gLhxuFgazxKjEMdlh9vemGlubi7yqp1HZCMWLghCLaJFoCT9DZoM0dcaEUAaxAbmGR3x6fKeDeHSwT060C0cLJ7TxnRA9DYxFtCHd1++xZHQseggaMfY9NYSoyJBgOI65knNhDBG7JvgeYHMC+xA3lZDTRA74OI5GHQD+W1/C78UzEJmaqipqW3c55cGlzIQuk4AzvyRVDP/EQTCV2vGhegXKUQrGBjikEjJAb9kkV3wqsvBPvEONIyJ5mAMnghxgYSNenZGqBYS8hgcbwd7fWBWVQ/l+UXF4afK02Yv4SYnw3eVaatHiwTcmwHyWC+ehLgd8jc3nEh0CukDdOqUgTe1f+MUd7z/Djs+cwsW8P0J3jzPDpPaXW/q2DY7PembQ5P1tPzIice1Hq368cHQryTbYRrtpil66hf9dTF3KGOgY5TEGKHKlHKoGTUmcHYTjpMjjqzos1IDIIerdap1LCvS5xRo6c=
-    skip_cleanup: true
-    on:
-      tags: true
-      distributions: sdist bdist_wheel
-      repo: arnehilmann/sunstone-rest-client
   - provider: releases
     api_key:
       secure: OJ5+x3bGC+uviLoGMOvSajD57okOH6w2G5NI2PYvRXwqCYbJqxCLlLp007kt6JBJnpTtburUJz1AUffp/jBPJcHAJuWbXJzj4OFpcfPvuIwsWmcn8I3P1hpmchBpDFsTzDVyEuT7rqtRlqYqZiYK6pF/4W/92f4QlvEJdbvuTWKrd4bUvygaxX5MM37nFoaYxR0RQ2jG+2xHT4Ee6DrQtQN2HJhbCVw7GzSV1rF2Wusgm14hsyx8rvKDHdXYLdABU26seJlufuNMqc2QoSBMf6HYnssdZMYnJYJpILhJf3FuNAX3mYxyWUQUxyG7osiTX9aZFOWp7+PZIUebt2BOYrKIdHg2JC9Yg0fAPPBvxstbxZ5y0NYvO/lP1jN63fCETkyhwo4MjjQyUdqhtVJZAkOcoqEvhHXjEVeTum1rHqzkFu7x6lx2jRpGvDAgUb+cupCyL1U6jJtK660pTA8jjgTxvvTcvRT6O5hIUlcPpeMOp2seDDcwYZIOE/FHkOD8ayANaSZ6wiq4GnvFmeRqsEibvBg2ERDazp4uOEeshEHKLFe4XC+BwbLaTlOGdqfKliPxyA/KKbpLoKxOQXz7t9BqW5xMz6hsDI8jDXW1y1fLk6y8f6XZ944r8i1yDvGQYdv4mYeL2OLoRIu0BGPzcr4AE/9VnR1VixSw9AVZvFE=
@@ -34,4 +23,13 @@ deploy:
     skip_cleanup: true
     on:
       tags: true
+      repo: arnehilmann/sunstone-rest-client
+  - provider: pypi
+    user: Arne.Hilmann
+    password:
+      secure: lQ+ON7rm/Qi5ZNtQ01WV5WIuKk6cPQ6cPFUnr/zAPumtjZFCy2A9/jHUsXLTsJpbJ7Fdt1uvwBNe+bOoGqQvhc+De7XfEFOGOQbDUyCn2dNulEaIEeDx1N4nNbaQ01yUWbDgo7LRYqGmCxbgtMx2Fir73ibZTpvcT8oNtnHWu09Ejvs0Aqj91cK4jdx+H8csSXreRl9psf8i7gLhxuFgazxKjEMdlh9vemGlubi7yqp1HZCMWLghCLaJFoCT9DZoM0dcaEUAaxAbmGR3x6fKeDeHSwT060C0cLJ7TxnRA9DYxFtCHd1++xZHQseggaMfY9NYSoyJBgOI65knNhDBG7JvgeYHMC+xA3lZDTRA74OI5GHQD+W1/C78UzEJmaqipqW3c55cGlzIQuk4AzvyRVDP/EQTCV2vGhegXKUQrGBjikEjJAb9kkV3wqsvBPvEONIyJ5mAMnghxgYSNenZGqBYS8hgcbwd7fWBWVQ/l+UXF4afK02Yv4SYnw3eVaatHiwTcmwHyWC+ehLgd8jc3nEh0CukDdOqUgTe1f+MUd7z/Djs+cwsW8P0J3jzPDpPaXW/q2DY7PembQ5P1tPzIice1Hq368cHQryTbYRrtpil66hf9dTF3KGOgY5TEGKHKlHKoGTUmcHYTjpMjjqzos1IDIIerdap1LCvS5xRo6c=
+    skip_cleanup: true
+    on:
+      tags: true
+      distributions: sdist bdist_wheel
       repo: arnehilmann/sunstone-rest-client
