@@ -31,7 +31,6 @@ def set_properties(project):
     project.build_depends_on('testfixtures')
 
     project.depends_on("requests")
-    project.depends_on("click")
     project.depends_on("bs4")
 
     project.set_property('coverage_threshold_warn', 75)
