@@ -12,7 +12,7 @@ use_plugin('filter_resources')
 name = "sunstone-rest-client"
 version = '0.0.11'
 
-default_task = ["clean", "analyze", "link_dist_dir", "publish"]
+default_task = ["clean", "analyze", "publish"]
 
 authors = [Author('Arne Hilmann', 'arne.hilmann@gmail.com')]
 summary = 'sunstone rest client | an opennebula client in python, using the sunstone ReST API'

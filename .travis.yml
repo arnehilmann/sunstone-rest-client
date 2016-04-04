@@ -16,6 +16,7 @@ script:
 after_success:
   - scripts/build-rpm
   - coveralls --verbose
+  - cp -R target/dist/*/dist .
 deploy:
   - provider: releases
     api_key:
