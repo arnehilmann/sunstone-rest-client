@@ -10,9 +10,9 @@ use_plugin('copy_resources')
 use_plugin('filter_resources')
 
 name = "sunstone-rest-client"
-version = '0.0.10'
+version = '0.0.11'
 
-default_task = ["clean", "analyze", "publish"]
+default_task = ["clean", "analyze", "link_dist_dir", "publish"]
 
 authors = [Author('Arne Hilmann', 'arne.hilmann@gmail.com')]
 summary = 'sunstone rest client | an opennebula client in python, using the sunstone ReST API'
@@ -30,6 +30,18 @@ def gittag(project, logger):
     logger.info("The following commands create a new release, triggering all the fun stuff:")
     logger.info("git tag -a v{0} -m v{0}".format(project.version))
     logger.info("git push --tags")
+
+
+@task
+def link_dist_dir(project, logger):
+    try:
+        import os
+        os.symlink(project.expand("$dir_dist/dist"), "dist")
+    except FileExistsError as fee:
+        if fee.errno == 17:
+            logger.info("'dist' dir already present, skip symlinking")
+        else:
+            raise
 
 
 @init
