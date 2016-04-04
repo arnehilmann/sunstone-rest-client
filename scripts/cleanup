@@ -12,8 +12,8 @@ done
 echo "## pwd"
 pwd
 
-echo "## tree"
-tree
+echo "## find"
+find .
 
 echo "## ps aux"
 ps aux
