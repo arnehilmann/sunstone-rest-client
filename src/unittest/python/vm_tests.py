@@ -23,6 +23,23 @@ class VmTests(unittest.TestCase):
         result = client.get_first_template_by_name("foo")
         self.assertTrue(result["UID"] == "333")
 
+        self.assertRaises(StopIteration, client.get_first_vm_by_name, "unknownVM")
+
+    def test_fetch_failed(self):
+        client = sunstone_rest_client.RestClient("http://foobar:4711")
+        client.session = Mock()
+        failed = Attrs(ok=False, reason="oops")
+        client.session.get = Mock(return_value=failed)
+        self.assertRaises(Exception, client._fetch)
+
+    def test_fetch_successfully(self):
+        client = sunstone_rest_client.RestClient("http://foobar:4711")
+        client.session = Mock()
+        successfully = Attrs(ok=True, json=lambda: "tadahh")
+        client.session.get = Mock(return_value=successfully)
+        response = client._fetch()
+        self.assertEqual("tadahh", response)
+
     def test_delete(self):
         client = sunstone_rest_client.RestClient("http://foobar:4711")
         client.cache = {"/vm": {"VM_POOL": {"VM": {"NAME": "dummyVM", "ID": "42"}}}}
@@ -30,6 +47,11 @@ class VmTests(unittest.TestCase):
         client.session.delete = Mock(return_value="ok")
         result = client.delete_multiple_vms_by_name("dummyVM")
         self.assertEqual(result["42"], "ok")
+
+
+class Attrs(object):
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
 
 
 if __name__ == "__main__":

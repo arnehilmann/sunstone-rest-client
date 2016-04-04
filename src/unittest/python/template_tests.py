@@ -17,6 +17,13 @@ class TemplateTests(unittest.TestCase):
         result = client.instantiate_by_name("foo", "newVM")
         self.assertEqual(result, "ok")
 
+    def test_find_by_id(self):
+        client = sunstone_rest_client.RestClient("http://foobar:4711")
+        client.cache = {"/vmtemplate": {
+            "VMTEMPLATE_POOL": {"VMTEMPLATE": {"NAME": "foo", "UID": "333", "TEMPLATE": "empty"}}}}
+        result = client.get_template_by_id(333)
+        self.assertEqual(result["NAME"], "foo")
+
 
 if __name__ == "__main__":
     unittest.main()
