@@ -1,0 +1,24 @@
+#!/bin/bash
+set -u -e -E
+
+echo "# cleaning up"
+
+echo "## stopping all docker containers"
+for ID in $(docker ps -q); do
+    echo "### stopping docker container $ID"
+    docker stop $ID
+done
+
+echo "## pwd"
+pwd
+
+echo "## tree"
+tree
+
+echo "## ps aux"
+ps aux
+
+echo "## lsof of scripts/"
+lsof scripts
+
+echo "done."

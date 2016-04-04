@@ -16,7 +16,7 @@ script:
 after_success:
   - scripts/build-rpm
   - coveralls --verbose
-  - scripts/stop-all-containers
+  - scripts/cleanup
 deploy:
   - provider: releases
     api_key:

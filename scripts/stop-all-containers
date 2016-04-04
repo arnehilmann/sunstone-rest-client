@@ -1,9 +1,0 @@
-#!/bin/bash
-set -u -e -E
-
-echo "stopping all docker containers"
-for ID in $(docker ps -q); do
-    echo "stopping docker container $ID"
-    docker stop $ID
-done
-echo "done."
