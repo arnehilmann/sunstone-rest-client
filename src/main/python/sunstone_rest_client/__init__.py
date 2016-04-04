@@ -69,7 +69,7 @@ class RestClient(object):
                 yield vm
 
     def get_first_vm_by_name(self, name):
-        return self.get_multiple_vms_by_name(name).next()
+        return next(self.get_multiple_vms_by_name(name))
 
     def fetch_templates(self):
         templates = self._fetch("vmtemplate")["VMTEMPLATE_POOL"]["VMTEMPLATE"]
@@ -90,7 +90,7 @@ class RestClient(object):
                 yield template
 
     def get_first_template_by_name(self, name):
-        return self.get_multiple_templates_by_name(name).next()
+        return next(self.get_multiple_templates_by_name(name))
 
     def _action(self, endpoint, perform, params):
         action = {"action": {"perform": perform, "params": params},
