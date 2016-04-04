@@ -16,7 +16,6 @@ script:
 after_success:
   - scripts/build-rpm
   - coveralls --verbose
-before_deploy:
   - scripts/stop-all-containers
 deploy:
   - provider: releases
