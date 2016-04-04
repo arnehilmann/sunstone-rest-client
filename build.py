@@ -1,4 +1,4 @@
-from pybuilder.core import use_plugin, init, Author
+from pybuilder.core import use_plugin, init, Author, task
 
 use_plugin("python.core")
 use_plugin("python.unittest")
@@ -10,7 +10,7 @@ use_plugin('copy_resources')
 use_plugin('filter_resources')
 
 name = "sunstone-rest-client"
-version = '0.0.9'
+version = '0.0.10'
 
 default_task = ["clean", "analyze", "publish"]
 
@@ -23,6 +23,13 @@ instead of the XML-RPC
 """
 url = 'https://github.com/arnehilmann/sunstone-rest-client'
 license = 'Apache License v2.0'
+
+
+@task
+def gittag(project, logger):
+    logger.info("The following commands create a new release, triggering all the fun stuff:")
+    logger.info("git tag -a v{0} -m v{0}".format(project.version))
+    logger.info("git push --tags")
 
 
 @init
