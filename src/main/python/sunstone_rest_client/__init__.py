@@ -66,6 +66,13 @@ class RestClient(object):
             if vm["ID"] == id:
                 return vm
 
+    def get_vm_detail(self, id, detail):
+        detail2toplevel = {"log": "vm_log"}
+        toplevel = detail2toplevel.get(detail)
+        if toplevel:
+            return self._fetch("/vm/%s/%s" % (id, detail)).get(toplevel)
+        return self._fetch("/vm/%s/%s" % (id, detail))
+
     def get_multiple_vms_by_name(self, name):
         for vm in self.fetch_vms():
             if vm["NAME"] == name:
@@ -150,4 +157,8 @@ def find_csrftoken(html):
 
 if __name__ == "__main__":
     client = RestClient("http://localhost:9869").login("oneadmin", "opennebula")
-    print(client.fetch_hosts())
+    # print(client.fetch_hosts())
+
+    print(client.get_vm_by_id(38))
+    print("-" * 40)
+    print(client.get_vm_detail(38, "log"))
