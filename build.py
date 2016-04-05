@@ -32,18 +32,6 @@ def gittag(project, logger):
     logger.info("git push --tags")
 
 
-@task
-def link_dist_dir(project, logger):
-    try:
-        import os
-        os.symlink(project.expand("$dir_dist/dist"), "dist")
-    except FileExistsError as fee:
-        if fee.errno == 17:
-            logger.info("'dist' dir already present, skip symlinking")
-        else:
-            raise
-
-
 @init
 def set_properties(project):
     project.build_depends_on('mock')
