@@ -8,11 +8,13 @@ from bs4 import BeautifulSoup
 
 
 class RestClient(object):
-    def __init__(self, url, verify=True):
+    def __init__(self, url, verify=True, use_cache=True):
         self.url = url if url.endswith("/") else url + "/"
         self.csrftoken = None
         self.client_opts = {}
         self.verify = verify
+        self.use_cache = use_cache
+
         self.cache = {}
         self.session = None
 
@@ -48,7 +50,8 @@ class RestClient(object):
             raise Exception("unable to fetch %s: %s" % (endpoint, reply.reason))
 
         reply_json = reply.json()
-        self.cache[endpoint] = reply_json
+        if self.use_cache:
+            self.cache[endpoint] = reply_json
         return reply_json
 
     def fetch_vms(self):
