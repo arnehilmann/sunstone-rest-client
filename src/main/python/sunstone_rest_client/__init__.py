@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 
 class RestClient(object):
     def __init__(self, url, verify=True, use_cache=True):
-        self.url = url if url.endswith("/") else url + "/"
+        self.url = url.rstrip("/")
         self.csrftoken = None
         self.client_opts = {}
         self.verify = verify
@@ -21,7 +21,7 @@ class RestClient(object):
     def login(self, username, password, **kwargs):
         self.session = requests.session()
 
-        login = self.session.post(self.url + "login",
+        login = self.session.post(self.url + "/login",
                                   auth=(username, password),
                                   verify=self.verify)
         if not login.ok:
