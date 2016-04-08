@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 
 try:
     from logging import NullHandler
-except NameError:
+except ImportError:
     from sunstone_rest_client.util import NullHandler
 
 
