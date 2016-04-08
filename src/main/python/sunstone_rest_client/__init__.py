@@ -1,41 +1,89 @@
 #!/usr/bin/env python
 from __future__ import print_function
 import json
+import logging
 import re
+import time
 
 import requests
 from bs4 import BeautifulSoup
 
+try:
+    from logging import NullHandler
+except NameError:
+    from sunstone_rest_client.util import NullHandler
+
+
+class LoginFailedException(Exception):
+    pass
+
+
+class NotFoundException(Exception):
+    pass
+
+
+class ReplyException(Exception):
+    pass
+
+
+logger = logging.getLogger(__name__)
+logger.addHandler(NullHandler())
+
 
 class RestClient(object):
-    def __init__(self, url, verify=True, use_cache=True):
+    vm_details = {"/log": "vm_log", "": "VM"}
+
+    def __init__(self, url, verify=True, use_cache=True, disable_urllib3_warnings=True):
         self.url = url.rstrip("/")
         self.csrftoken = None
         self.client_opts = {}
         self.verify = verify
         self.use_cache = use_cache
 
+        if disable_urllib3_warnings:
+            logger.info("disabling urllib3 warning of requests packages")
+            requests.packages.urllib3.disable_warnings()
+
         self.cache = {}
         self.session = None
 
     def login(self, username, password, **kwargs):
-        self.session = requests.session()
+        for i in range(10):
+            self.session = requests.session()  # TODO is it really necessary to start a new session on every iteration?
+            login = self.session.post(self.url + "/login", auth=(username, password))
+            if not login.ok:
+                raise LoginFailedException("wrong credentials for %s at %s" % (username, self.url))
 
-        login = self.session.post(self.url + "/login",
-                                  auth=(username, password),
-                                  verify=self.verify)
-        if not login.ok:
-            raise Exception("cannot login on %s" % self.url)
+            logger.debug("sunstone session cookie: %s" % self.session.cookies.get("sunstone"))
+            time.sleep(1)
 
-        root = self.session.get(self.url,
-                                headers={'Referer': self.url},
-                                verify=self.verify)
+            root = self.session.get(self.url, headers={'Referer': self.url})
+
+            if self.session.cookies.get("one-user"):
+                break
+            time.sleep(.5)
+
+        if not self.session.cookies.get("one-user"):
+            raise LoginFailedException("credentials supposedly okay, but authorization handshake failed repeatedly")
 
         self.csrftoken = find_csrftoken(root.content)
         if not self.csrftoken:
-            raise Exception("login successfully, but no csrftoken found in %s" % self.url)
+            raise LoginFailedException("no csrftoken found in %s" % self.url)
 
         self.client_opts["csrftoken"] = self.csrftoken
+
+        for i in range(10):
+            try:
+                logger.debug("checking session, fetching random vm details, awaiting status != 401 (Unauthorized)")
+                self.get_vm_detail(333333, "log")
+                break
+            except NotFoundException:
+                break
+            except Exception as e:
+                if i == 10:
+                    raise LoginFailedException("login and csrftoken okay, but still not authorized, giving up!", e)
+                logger.debug(e)
+                time.sleep(.2)
 
         return self
 
@@ -43,11 +91,11 @@ class RestClient(object):
         endpoint = endpoint if endpoint.startswith("/") else "/" + endpoint
         if endpoint in self.cache:
             return self.cache[endpoint]
-        reply = self.session.get(self.url + endpoint,
-                                 params=self.client_opts,
-                                 verify=self.verify)
+        reply = self.session.get(self.url + endpoint, params=self.client_opts)
         if not reply.ok:
-            raise Exception("unable to fetch %s: %s" % (endpoint, reply.reason))
+            if reply.status_code == 404:
+                raise NotFoundException(endpoint)
+            raise ReplyException("unable to fetch %s: %i %s" % (endpoint, reply.status_code, reply.reason), reply)
 
         reply_json = reply.json()
         if self.use_cache:
@@ -66,12 +114,14 @@ class RestClient(object):
             if vm["ID"] == id:
                 return vm
 
-    def get_vm_detail(self, id, detail):
-        detail2toplevel = {"log": "vm_log"}
-        toplevel = detail2toplevel.get(detail)
+    def get_vm_detail(self, id, detail=None):
+        if detail:
+            detail = detail if detail.startswith("/") else "/" + detail
+        detail = detail if detail else ""
+        toplevel = RestClient.vm_details.get(detail)
         if toplevel:
-            return self._fetch("/vm/%s/%s" % (id, detail)).get(toplevel)
-        return self._fetch("/vm/%s/%s" % (id, detail))
+            return self._fetch("/vm/%s%s" % (id, detail)).get(toplevel)
+        return self._fetch("/vm/%s%s" % (id, detail))
 
     def get_multiple_vms_by_name(self, name):
         for vm in self.fetch_vms():
@@ -103,8 +153,7 @@ class RestClient(object):
         return next(self.get_multiple_templates_by_name(name))
 
     def _action(self, endpoint, perform, params):
-        action = {"action": {"perform": perform, "params": params},
-                  "csrftoken": self.csrftoken}
+        action = {"action": {"perform": perform, "params": params}, "csrftoken": self.csrftoken}
         reply = self.session.post(self.url + endpoint, data=json.dumps(action))
         return reply
 
@@ -156,9 +205,7 @@ def find_csrftoken(html):
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.DEBUG)
     client = RestClient("http://localhost:9869").login("oneadmin", "opennebula")
-    # print(client.fetch_hosts())
-
-    print(client.get_vm_by_id(38))
-    print("-" * 40)
+    print(client.get_vm_detail(38))
     print(client.get_vm_detail(38, "log"))
