@@ -3,6 +3,7 @@ from mock import patch, Mock
 import unittest
 
 import sunstone_rest_client
+import sunstone_rest_client.util
 
 
 class LoginTests(unittest.TestCase):
@@ -25,6 +26,10 @@ class LoginTests(unittest.TestCase):
         html = """<httml><bla></bla><script>tadahh</script><script>var csrftoken='foo';</script></html>"""
         token = sunstone_rest_client.find_csrftoken(html)
         self.assertEquals(token, "foo")
+
+    def test_null_handler(self):
+        nh = sunstone_rest_client.util.NullHandler()
+        nh.emit("dummy")
 
 
 if __name__ == "__main__":
