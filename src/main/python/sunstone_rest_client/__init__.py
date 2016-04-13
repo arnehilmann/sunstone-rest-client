@@ -41,7 +41,7 @@ class RestClient(object):
         self.use_cache = use_cache
 
         if disable_urllib3_warnings:
-            logger.info("disabling urllib3 warning of requests packages")
+            logger.debug("disabling urllib3 warning of requests packages")
             requests.packages.urllib3.disable_warnings()
 
         self.cache = {}
