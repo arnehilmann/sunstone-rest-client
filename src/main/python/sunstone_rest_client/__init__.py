@@ -50,9 +50,14 @@ class RestClient(object):
     def login(self, username, password, **kwargs):
         for i in range(10):
             self.session = requests.session()  # TODO is it really necessary to start a new session on every iteration?
-            login = self.session.post(self.url + "/login", auth=(username, password))
-            if not login.ok:
-                raise LoginFailedException("wrong credentials for %s at %s" % (username, self.url))
+            try:
+                login = self.session.post(self.url + "/login", auth=(username, password))
+                if not login.ok:
+                    raise LoginFailedException("wrong credentials for %s at %s" % (username, self.url))
+            except Exception as e:
+                logger.warn("%s: retrying in 1 second" % str(e))
+                time.sleep(1)
+                continue
 
             logger.debug("sunstone session cookie: %s" % self.session.cookies.get("sunstone"))
             time.sleep(1)
