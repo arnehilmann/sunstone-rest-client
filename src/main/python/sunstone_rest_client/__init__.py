@@ -35,6 +35,8 @@ class RestClient(object):
 
     def __init__(self, url, verify=True, use_cache=True, disable_urllib3_warnings=True):
         self.url = url.rstrip("/")
+        self.username = None
+        self.password = None
         self.csrftoken = None
         self.client_opts = {}
         self.verify = verify
@@ -48,12 +50,17 @@ class RestClient(object):
         self.session = None
 
     def login(self, username, password, **kwargs):
+        self.username = username
+        self.password = password
+        return self
+
+    def _login(self):
         for i in range(10):
             self.session = requests.session()  # TODO is it really necessary to start a new session on every iteration?
             try:
-                login = self.session.post(self.url + "/login", auth=(username, password))
+                login = self.session.post(self.url + "/login", auth=(self.username, self.password))
                 if not login.ok:
-                    raise LoginFailedException("wrong credentials for %s at %s" % (username, self.url))
+                    raise LoginFailedException("wrong credentials for %s at %s" % (self.username, self.url))
             except Exception as e:
                 logger.warn("%s: retrying in 1 second" % str(e))
                 time.sleep(1)
@@ -96,6 +103,8 @@ class RestClient(object):
         endpoint = endpoint if endpoint.startswith("/") else "/" + endpoint
         if endpoint in self.cache:
             return self.cache[endpoint]
+        if not self.csrftoken:
+            self._login()
         reply = self.session.get(self.url + endpoint, params=self.client_opts)
         if not reply.ok:
             if reply.status_code == 404:

@@ -18,9 +18,8 @@ class LoginTests(unittest.TestCase):
     @patch('requests.session', Mock())
     @patch('sunstone_rest_client.find_csrftoken', Mock(return_value=None))
     def test_failed_login(self):
-        self.assertRaises(
-            Exception,
-            sunstone_rest_client.RestClient("http://foobar:4711").login, "user", "passwd")
+        client = sunstone_rest_client.RestClient("http://foobar:4711").login("user", "passwd")
+        self.assertRaises(Exception, client._login)
 
     def test_find_csrf_token(self):
         html = """<httml><bla></bla><script>tadahh</script><script>var csrftoken='foo';</script></html>"""

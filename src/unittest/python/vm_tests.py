@@ -35,6 +35,7 @@ class VmTests(unittest.TestCase):
     def test_fetch_successfully(self):
         client = sunstone_rest_client.RestClient("http://foobar:4711")
         client.session = Mock()
+        client.csrftoken = "1234"
         successfully = Attrs(ok=True, json=lambda: "tadahh")
         client.session.get = Mock(return_value=successfully)
         response = client._fetch()
