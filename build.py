@@ -1,4 +1,5 @@
 from pybuilder.core import use_plugin, init, Author, task
+import subprocess
 
 use_plugin("python.core")
 use_plugin("python.unittest")
@@ -10,7 +11,10 @@ use_plugin('copy_resources')
 use_plugin('filter_resources')
 
 name = "sunstone-rest-client"
-version = '0.1.5'
+
+result = subprocess.check_output(["git", "log", "--oneline"])
+commit_count = len(result.splitlines())
+version = "0.1.%i" % commit_count
 
 default_task = ["clean", "analyze", "publish"]
 
