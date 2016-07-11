@@ -41,6 +41,10 @@ class RestClient(object):
         self.client_opts = {}
         self.verify = verify
         self.use_cache = use_cache
+        self.failed_login = False
+
+        self.cache = {}
+        self.session = None
 
         if disable_urllib3_warnings:
             logger.debug("disabling urllib3 warning of requests packages")
@@ -56,28 +60,34 @@ class RestClient(object):
     def login(self, username, password, **kwargs):
         self.username = username
         self.password = password
+        logger.debug("login url: %s" % self.url)
+        logger.debug("login username: %s" % self.username)
+        self.failed_login = False
         return self
 
     def _login(self):
+        if self.failed_login:
+            raise LoginFailedException("login failed too often, giving up here...")
         for i in range(10):
             self.session = requests.session()  # TODO is it really necessary to start a new session on every iteration?
             try:
                 login = self.session.post(self.url + "/login", auth=(self.username, self.password))
                 if not login.ok:
-                    raise LoginFailedException("wrong credentials for %s at %s" % (self.username, self.url))
+                    self.failed_login = True
+                    raise LoginFailedException("login failed too often, giving up here...")
             except Exception as e:
-                logger.warn("%s: retrying in 1 second" % str(e))
-                time.sleep(1)
+                logger.debug("%s: retrying" % str(e))
+                time.sleep(.2)
                 continue
 
             logger.debug("sunstone session cookie: %s" % self.session.cookies.get("sunstone"))
-            time.sleep(1)
+            time.sleep(.2)
 
             root = self.session.get(self.url, headers={'Referer': self.url})
 
             if self.session.cookies.get("one-user"):
                 break
-            time.sleep(.5)
+            time.sleep(.2)
 
         if not self.session.cookies.get("one-user"):
             raise LoginFailedException("credentials supposedly okay, but authorization handshake failed repeatedly")
@@ -88,7 +98,7 @@ class RestClient(object):
 
         self.client_opts["csrftoken"] = self.csrftoken
 
-        for i in range(10):
+        for i in range(5):
             try:
                 logger.debug("checking session, fetching random vm details, awaiting status != 401 (Unauthorized)")
                 self.get_vm_detail(333333, "log")
