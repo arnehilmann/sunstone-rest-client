@@ -33,7 +33,7 @@ logger.addHandler(NullHandler())
 class RestClient(object):
     vm_details = {"/log": "vm_log", "": "VM"}
 
-    def __init__(self, url, verify=True, use_cache=True, disable_urllib3_warnings=True):
+    def __init__(self, url, verify=True, use_cache=True, disable_urllib3_warnings=True, simple_logging=False):
         self.url = url.rstrip("/")
         self.username = None
         self.password = None
@@ -46,8 +46,12 @@ class RestClient(object):
             logger.debug("disabling urllib3 warning of requests packages")
             requests.packages.urllib3.disable_warnings()
 
-        self.cache = {}
-        self.session = None
+        if simple_logging:
+            logger.setLevel(logging.DEBUG)
+            sh = logging.StreamHandler()
+            sh.setLevel(logging.DEBUG)
+            sh.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+            logger.addHandler(sh)
 
     def login(self, username, password, **kwargs):
         self.username = username
