@@ -12,7 +12,7 @@ use_plugin('filter_resources')
 
 name = "sunstone-rest-client"
 
-result = subprocess.check_output(["git", "log", "--oneline"])
+result = subprocess.Popen(["git", "log", "--oneline"], stdout=subprocess.PIPE).communicate()[0]
 commit_count = len(result.splitlines())
 version = "0.1.%i" % commit_count
 
